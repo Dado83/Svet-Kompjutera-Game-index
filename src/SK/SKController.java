@@ -55,13 +55,13 @@ public class SKController implements Initializable {
         minG.setValueFactory(min);
         maxG.setValueFactory(max);
         sk = new Model();
-        skLista = Model.igraLista;
+        skLista = Model.gameIndex;
         ArrayList<Igra> igreLista = new ArrayList<>(skLista);
         Collections.sort(igreLista, (Igra o1, Igra o2) -> o2.link.compareTo(o1.link));
         s = sk.writeToHTML(igreLista);
         browser = web.getEngine();
         browser.loadContent(s);
-        Model.html = s;
+        Model.webData = s;
     }    
      
     //resetovanje pretrage
@@ -73,7 +73,7 @@ public class SKController implements Initializable {
         ocjena.setText("");
         min.setValue(1000);
         max.setValue(3000);
-        Model.html = s;
+        Model.webData = s;
     }
     
     //pretraga linkova
@@ -81,21 +81,21 @@ public class SKController implements Initializable {
     public void pretraga() throws IOException {
         
     if (autor.getText().isEmpty() && ocjena.getText().isEmpty()){
-        browser.loadContent(sk.writeToHTML(sk.pretragaKomplet(skLista, naslov.getText(), "", -1, minG.getValue(), maxG.getValue())));
+        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, naslov.getText(), "", -1, minG.getValue(), maxG.getValue())));
     } else if (naslov.getText().isEmpty() && ocjena.getText().isEmpty()){
-        browser.loadContent(sk.writeToHTML(sk.pretragaKomplet(skLista, "", autor.getText(), -1, minG.getValue(), maxG.getValue())));
+        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, "", autor.getText(), -1, minG.getValue(), maxG.getValue())));
     } else if (naslov.getText().isEmpty() && autor.getText().isEmpty()){
-        browser.loadContent(sk.writeToHTML(sk.pretragaKomplet(skLista, "", "", Integer.parseInt(ocjena.getText()), minG.getValue(), maxG.getValue())));
+        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, "", "", Integer.parseInt(ocjena.getText()), minG.getValue(), maxG.getValue())));
     } else if (naslov.getText().isEmpty()){
-        browser.loadContent(sk.writeToHTML(sk.pretragaKomplet(skLista, "", autor.getText(), Integer.parseInt(ocjena.getText()), minG.getValue(), maxG.getValue())));
+        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, "", autor.getText(), Integer.parseInt(ocjena.getText()), minG.getValue(), maxG.getValue())));
     } else if (autor.getText().isEmpty()){
-        browser.loadContent(sk.writeToHTML(sk.pretragaKomplet(skLista, naslov.getText(), "", Integer.parseInt(ocjena.getText()), minG.getValue(), maxG.getValue())));
+        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, naslov.getText(), "", Integer.parseInt(ocjena.getText()), minG.getValue(), maxG.getValue())));
     } else if(ocjena.getText().isEmpty()){
-        browser.loadContent(sk.writeToHTML(sk.pretragaKomplet(skLista, naslov.getText(), autor.getText(), -1, minG.getValue(), maxG.getValue())));
+        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, naslov.getText(), autor.getText(), -1, minG.getValue(), maxG.getValue())));
     } else if (naslov.getText().isEmpty() && autor.getText().isEmpty() && ocjena.getText().isEmpty()){
-        browser.loadContent(sk.writeToHTML(sk.pretragaKomplet(skLista, "", "", -1, minG.getValue(), maxG.getValue())));
+        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, "", "", -1, minG.getValue(), maxG.getValue())));
     } else {
-        browser.loadContent(sk.writeToHTML(sk.pretragaKomplet(skLista, naslov.getText(), autor.getText(), Integer.parseInt(ocjena.getText()), minG.getValue(), maxG.getValue())));
+        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, naslov.getText(), autor.getText(), Integer.parseInt(ocjena.getText()), minG.getValue(), maxG.getValue())));
         }
     }
     
@@ -106,7 +106,7 @@ public class SKController implements Initializable {
         
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(System.getProperty("user.home"), 
                                                                                            "\\desktop\\SK igre.html"))) {
-            writer.write(Model.html);
+            writer.write(Model.webData);
             writer.flush();
         } 
     }

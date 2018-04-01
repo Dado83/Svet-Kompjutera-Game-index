@@ -19,14 +19,14 @@ public class Main extends Application {
        stage.setScene(scene);
        stage.show();
        stage.setResizable(true);
-       stage.setTitle("Svet igara - pretraga (by 83deadpool)");
+       stage.setTitle("Svet igara - game index (by 83deadpool)");
        stage.getIcons().add(new Image(getClass().getResourceAsStream("/sk.png")));
        stage.setOnCloseRequest((WindowEvent event) -> {
            Platform.exit();
        });
     }
     
-    public static void main(String[] args){
+    public static void main(String[] args) {
     	launch(args);
     }
     

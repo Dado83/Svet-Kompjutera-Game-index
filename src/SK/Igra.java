@@ -21,26 +21,22 @@ public class Igra implements Serializable {
     }
     
     Igra(String n, String a, String g, String l){
-        naslov = n;
-        autor = a;
-        godina = g;
-        ocjena = -1;
-        link = l;
+        super();
     }
     
-    public void setNaslov(String n){
+    public void setTitle(String n){
         naslov = n;
     }
     
-    public void setAutor(String a){
+    public void setAuthor(String a){
         autor = a;
     }
     
-    public void setOcjena(int o){
+    public void setScore(int o){
         ocjena = o;
     }
     
-    public void setGodina(String g){
+    public void setYear(String g){
         godina = g;
     }
     
