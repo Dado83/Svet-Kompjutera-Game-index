@@ -16,7 +16,7 @@ import javafx.beans.property.StringProperty;
  */
 
 
-public class SK {
+public class Model {
     
     private Igra igra;
     static ArrayList<String> linkURLs = new ArrayList<>();
@@ -44,13 +44,13 @@ public class SK {
             System.out.println("Broj linkova: " + igraLista.size());
             return igraLista;
         } catch (MalformedURLException ex) {
-            Logger.getLogger(SK.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Igra.class.getName()).log(Level.SEVERE, null, ex);System.out.println("url");
             Platform.exit();
         } catch (IOException ex) {
-            Logger.getLogger(SK.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Igra.class.getName()).log(Level.SEVERE, null, ex);System.out.println("io");
             Platform.exit();
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SK.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Igra.class.getName()).log(Level.SEVERE, null, ex);System.out.println("class");
             Platform.exit();
         }
         return null;

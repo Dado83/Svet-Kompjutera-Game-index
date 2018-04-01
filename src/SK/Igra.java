@@ -3,7 +3,7 @@ package SK;
 import java.io.Serializable;
 
 
-public class Game implements Serializable {
+public class Igra implements Serializable {
 	
     private static final long serialVersionUID = -3408039902845658861L;
     private String naslov;
@@ -12,7 +12,7 @@ public class Game implements Serializable {
     private String godina;
     String link;
     
-    Game(String n, String a, int o, String g, String l){
+    Igra(String n, String a, int o, String g, String l){
         naslov = n;
         autor = a;
         ocjena = o;
@@ -20,7 +20,7 @@ public class Game implements Serializable {
         link = l;
     }
     
-    Game(String n, String a, String g, String l){
+    Igra(String n, String a, String g, String l){
         naslov = n;
         autor = a;
         godina = g;

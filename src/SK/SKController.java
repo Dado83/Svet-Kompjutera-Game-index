@@ -27,8 +27,8 @@ public class SKController implements Initializable {
     @FXML
     private TextField ocjena;
     
-    HashSet<Game> skLista;
-    SK sk;
+    HashSet<Igra> skLista;
+    Model sk;
    
     String s = null;
     WebEngine browser;
@@ -54,14 +54,14 @@ public class SKController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         minG.setValueFactory(min);
         maxG.setValueFactory(max);
-        sk = new SK();
-        skLista = SK.igraLista;
+        sk = new Model();
+        skLista = Model.igraLista;
         ArrayList<Igra> igreLista = new ArrayList<>(skLista);
         Collections.sort(igreLista, (Igra o1, Igra o2) -> o2.link.compareTo(o1.link));
         s = sk.writeToHTML(igreLista);
         browser = web.getEngine();
         browser.loadContent(s);
-        SK.html = s;
+        Model.html = s;
     }    
      
     //resetovanje pretrage
@@ -73,7 +73,7 @@ public class SKController implements Initializable {
         ocjena.setText("");
         min.setValue(1000);
         max.setValue(3000);
-        SK.html = s;
+        Model.html = s;
     }
     
     //pretraga linkova
@@ -106,7 +106,7 @@ public class SKController implements Initializable {
         
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(System.getProperty("user.home"), 
                                                                                            "\\desktop\\SK igre.html"))) {
-            writer.write(SK.html);
+            writer.write(Model.html);
             writer.flush();
         } 
     }
@@ -114,11 +114,11 @@ public class SKController implements Initializable {
     //info
     @FXML
     public void about() throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("about.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/about.fxml"));
         Scene scene = new Scene(parent);
         Stage stage = new Stage();
         stage.setScene(scene);
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("dp.png")));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/dp.png")));
         stage.setResizable(false);
         stage.show();
     }
