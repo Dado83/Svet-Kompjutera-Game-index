@@ -11,14 +11,15 @@ import javafx.stage.WindowEvent;
 
 
 public class Main extends Application {
+	
 
-    @Override
+	@Override
     public void start(Stage stage) throws Exception {
        Parent root = FXMLLoader.load(getClass().getResource("/SK.fxml"));
        Scene scene = new Scene(root);
        stage.setScene(scene);
        stage.show();
-       stage.setResizable(true);
+       stage.setResizable(false);
        stage.setTitle("Svet igara - game index (by 83deadpool)");
        stage.getIcons().add(new Image(getClass().getResourceAsStream("/sk.png")));
        stage.setOnCloseRequest((WindowEvent event) -> {

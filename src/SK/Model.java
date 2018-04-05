@@ -10,13 +10,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.application.Platform;
 
 
 public class Model {
     
     static HashSet<Igra> gameIndex = new HashSet<>();
-    static String webData;
+    static String searchResultHTML;
     
     
     public static HashSet<Igra> loadGameIndex() {
@@ -41,7 +42,7 @@ public class Model {
         }
     
     
-    public ArrayList<Igra> gameIndexSearch(HashSet<Igra> gameInd, String naslov, String autor, 
+    public static ArrayList<Igra> gameIndexSearch(HashSet<Igra> gameInd, String naslov, String autor, 
     									   int ocjena, int god1, int god2)
     throws FileNotFoundException, IOException {
         
@@ -54,12 +55,12 @@ public class Model {
         								  && (index.getOcjena() >= ocjena) && (index.getGod() >= god1) 
         								  && (index.getGod() <= god2)))
                 .forEachOrdered((i) -> {searchResult.add(i);});
-            webData = this.writeToHTML(searchResult);
+            searchResultHTML = writeToHTML(searchResult);
             return searchResult;
         }
      
    
-    public String writeToHTML(ArrayList<Igra> a) {
+    public static String writeToHTML(ArrayList<Igra> a) {
         StringBuilder html = new StringBuilder();
         html.append("<table>");
         html.append("<tr><th>datum</th><th>naslov</th><th>autor</th><th>ocjena</th></tr>");

@@ -1,119 +1,130 @@
 package SK;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
-import javafx.fxml.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.ResourceBundle;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.web.*;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 
 public class SKController implements Initializable {
 
     @FXML
-    private WebView web;
+    private MenuItem update;
+	@FXML
+    private WebView webView;
     @FXML
-    private TextField naslov;
+    private TextField title;
     @FXML
-    private TextField autor;
+    private TextField author;
     @FXML
-    private TextField ocjena;
-    
-    HashSet<Igra> skLista;
-    Model sk;
-   
-    String s = null;
-    WebEngine browser;
-    
+    private TextField score;
     @FXML
-    private Spinner<Integer> minG = new Spinner<>(1998, 2017, 1998, 1);;
+    private Spinner<Integer> minYear = new Spinner<>(1998, 2017, 1998, 1);
     @FXML
-    private Spinner<Integer> maxG = new Spinner<>(1998, 2017, 2017, 1);;
-    
+    private Spinner<Integer> maxYear = new Spinner<>(1998, 2017, 2017, 1);
+  
     SpinnerValueFactory<Integer> min = new SpinnerValueFactory.IntegerSpinnerValueFactory(1998, 2017, 1998);
     SpinnerValueFactory<Integer> max = new SpinnerValueFactory.IntegerSpinnerValueFactory(1998, 2017, 2017);
-    @FXML
-    private AnchorPane pane;
-    @FXML
-    private MenuItem update;
+    HashSet<Igra> gameIndex;
+    String message = "uèitavam linkove, može potrajati ako je konekcija spora...";
+    String startPage = "<div style='font-size:30px; position:absolute; top:40%; left:20%'>"+ message +"</div>";
+    String gameIndexList;
+    WebEngine browser;
     
-    Stage primarysStage;
-    
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        minG.setValueFactory(min);
-        maxG.setValueFactory(max);
-        sk = new Model();
-        skLista = Model.gameIndex;
-        ArrayList<Igra> igreLista = new ArrayList<>(skLista);
-        Collections.sort(igreLista, (Igra o1, Igra o2) -> o2.link.compareTo(o1.link));
-        s = sk.writeToHTML(igreLista);
-        browser = web.getEngine();
-        browser.loadContent(s);
-        Model.webData = s;
+    	
+        minYear.setValueFactory(min);
+        maxYear.setValueFactory(max);
+        Model.loadGameIndex();
+        gameIndex = new HashSet<Igra>(Model.gameIndex);
+        ArrayList<Igra> gameIndexA = new ArrayList<>(gameIndex);
+        Collections.sort(gameIndexA, (Igra o1, Igra o2) -> o2.link.compareTo(o1.link));
+        gameIndexList = Model.writeToHTML(gameIndexA);
+        browser = webView.getEngine();
+        browser.loadContent(gameIndexList);
+        Model.searchResultHTML = gameIndexList;
     }    
      
-    //resetovanje pretrage
+
     @FXML
-    public void pocetna() {
-        browser.loadContent(s);
-        naslov.setText("");
-        autor.setText("");
-        ocjena.setText("");
+    public void reset() {
+    	
+        browser.loadContent(gameIndexList);
+        title.setText("");
+        author.setText("");
+        score.setText("");
         min.setValue(1000);
         max.setValue(3000);
-        Model.webData = s;
+        Model.searchResultHTML = startPage;
     }
     
-    //pretraga linkova
+
     @FXML
-    public void pretraga() throws IOException {
+    public void search() throws IOException {
         
-    if (autor.getText().isEmpty() && ocjena.getText().isEmpty()){
-        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, naslov.getText(), "", -1, minG.getValue(), maxG.getValue())));
-    } else if (naslov.getText().isEmpty() && ocjena.getText().isEmpty()){
-        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, "", autor.getText(), -1, minG.getValue(), maxG.getValue())));
-    } else if (naslov.getText().isEmpty() && autor.getText().isEmpty()){
-        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, "", "", Integer.parseInt(ocjena.getText()), minG.getValue(), maxG.getValue())));
-    } else if (naslov.getText().isEmpty()){
-        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, "", autor.getText(), Integer.parseInt(ocjena.getText()), minG.getValue(), maxG.getValue())));
-    } else if (autor.getText().isEmpty()){
-        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, naslov.getText(), "", Integer.parseInt(ocjena.getText()), minG.getValue(), maxG.getValue())));
-    } else if(ocjena.getText().isEmpty()){
-        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, naslov.getText(), autor.getText(), -1, minG.getValue(), maxG.getValue())));
-    } else if (naslov.getText().isEmpty() && autor.getText().isEmpty() && ocjena.getText().isEmpty()){
-        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, "", "", -1, minG.getValue(), maxG.getValue())));
+    if (author.getText().isEmpty() && score.getText().isEmpty()) {
+        browser.loadContent(Model.writeToHTML(Model.gameIndexSearch(gameIndex, 
+        		title.getText(), "", -1, minYear.getValue(), maxYear.getValue())));
+    } else if (title.getText().isEmpty() && score.getText().isEmpty()) {
+        browser.loadContent(Model.writeToHTML(Model.gameIndexSearch(gameIndex, 
+        		"", author.getText(), -1, minYear.getValue(), maxYear.getValue())));
+    } else if (title.getText().isEmpty() && author.getText().isEmpty()) {
+        browser.loadContent(Model.writeToHTML(Model.gameIndexSearch(gameIndex, 
+        		"", "", Integer.parseInt(score.getText()), minYear.getValue(), maxYear.getValue())));
+    } else if (title.getText().isEmpty()) {
+        browser.loadContent(Model.writeToHTML(Model.gameIndexSearch(gameIndex, 
+        		"", author.getText(), Integer.parseInt(score.getText()), minYear.getValue(), maxYear.getValue())));
+    } else if (author.getText().isEmpty()) {
+        browser.loadContent(Model.writeToHTML(Model.gameIndexSearch(gameIndex, 
+        		title.getText(), "", Integer.parseInt(score.getText()), minYear.getValue(), maxYear.getValue())));
+    } else if(score.getText().isEmpty()) {
+        browser.loadContent(Model.writeToHTML(Model.gameIndexSearch(gameIndex, 
+        		title.getText(), author.getText(), -1, minYear.getValue(), maxYear.getValue())));
+    } else if (title.getText().isEmpty() && author.getText().isEmpty() && score.getText().isEmpty()) {
+        browser.loadContent(Model.writeToHTML(Model.gameIndexSearch(gameIndex, 
+        		"", "", -1, minYear.getValue(), maxYear.getValue())));
     } else {
-        browser.loadContent(sk.writeToHTML(sk.gameIndexSearch(skLista, naslov.getText(), autor.getText(), Integer.parseInt(ocjena.getText()), minG.getValue(), maxG.getValue())));
+        browser.loadContent(Model.writeToHTML(Model.gameIndexSearch(gameIndex, 
+        		title.getText(), author.getText(), Integer.parseInt(score.getText()), 
+        		minYear.getValue(), maxYear.getValue())));
         }
     }
     
     
-    //snimanje u linkova u fajl
     @FXML
-    public void snimiHTML() throws IOException, URISyntaxException {
-        
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(System.getProperty("user.home"), 
-                                                                                           "\\desktop\\SK igre.html"))) {
-            writer.write(Model.webData);
+    public void saveSearchToDesktop() throws IOException, URISyntaxException {  
+    	
+        try (BufferedWriter writer = Files.newBufferedWriter(
+        		Paths.get(System.getProperty("user.home"), "\\desktop\\SK igre.html"))) {
+            writer.write(Model.searchResultHTML);
             writer.flush();
         } 
     }
     
-    //info
+    
     @FXML
-    public void about() throws IOException {
+    public void openAboutWindow() throws IOException {
+    	
         Parent parent = FXMLLoader.load(getClass().getResource("/about.fxml"));
         Scene scene = new Scene(parent);
         Stage stage = new Stage();

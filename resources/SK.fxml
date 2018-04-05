@@ -16,27 +16,27 @@
         <menus>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#about" text="About" />
+              <MenuItem mnemonicParsing="false" onAction="#openAboutWindow" text="About" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
       <AnchorPane layoutX="14.0" layoutY="24.0" AnchorPane.bottomAnchor="-3.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="25.0">
          <children>
-            <WebView fx:id="web" prefHeight="543.0" prefWidth="1170.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <WebView fx:id="webView" prefHeight="543.0" prefWidth="1170.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="14.0" layoutY="569.0" AnchorPane.bottomAnchor="5.0">
          <children>
-            <Button layoutX="773.0" layoutY="25.0" mnemonicParsing="false" onAction="#pretraga" text="Pretraga" />
-            <Button layoutX="1113.0" layoutY="25.0" mnemonicParsing="false" onAction="#pocetna" text="početna" />
-            <TextField fx:id="naslov" layoutY="25.0" prefHeight="25.0" prefWidth="200.0" promptText="naslov igre" />
-            <TextField fx:id="autor" layoutX="210.0" layoutY="25.0" prefHeight="25.0" prefWidth="200.0" promptText="autor teksta" />
-            <TextField fx:id="ocjena" layoutX="417.0" layoutY="25.0" prefHeight="25.0" prefWidth="100.0" promptText="min ocjena" />
+            <Button layoutX="773.0" layoutY="25.0" mnemonicParsing="false" onAction="#search" text="Pretraga" />
+            <Button layoutX="1113.0" layoutY="25.0" mnemonicParsing="false" onAction="#reset" text="početna" />
+            <TextField fx:id="title" layoutY="25.0" prefHeight="25.0" prefWidth="200.0" promptText="naslov igre" />
+            <TextField fx:id="author" layoutX="210.0" layoutY="25.0" prefHeight="25.0" prefWidth="200.0" promptText="autor teksta" />
+            <TextField fx:id="score" layoutX="417.0" layoutY="25.0" prefHeight="25.0" prefWidth="100.0" promptText="min ocjena" />
             <Label layoutX="527.0" layoutY="6.0" text="Godina: od - do" />
-            <Spinner fx:id="minG" layoutX="527.0" layoutY="25.0" prefHeight="25.0" prefWidth="100.0" />
-            <Spinner fx:id="maxG" layoutX="643.0" layoutY="25.0" prefHeight="25.0" prefWidth="100.0" />
-            <Button layoutX="845.0" layoutY="25.0" mnemonicParsing="false" onAction="#snimiHTML" text="Sačuvaj html na desktop" />
+            <Spinner fx:id="minYear" layoutX="527.0" layoutY="25.0" prefHeight="25.0" prefWidth="100.0" />
+            <Spinner fx:id="maxYear" layoutX="643.0" layoutY="25.0" prefHeight="25.0" prefWidth="100.0" />
+            <Button layoutX="845.0" layoutY="25.0" mnemonicParsing="false" onAction="#saveSearchToDesktop" text="Sačuvaj html na desktop" />
          </children>
       </AnchorPane>
    </children>

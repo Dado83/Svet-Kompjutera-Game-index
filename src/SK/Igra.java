@@ -13,7 +13,7 @@ public class Igra implements Serializable {
     String link;
     
     Igra(String n, String a, int o, String g, String l){
-        naslov = n;
+    	naslov = n;
         autor = a;
         ocjena = o;
         godina = g;
@@ -21,7 +21,7 @@ public class Igra implements Serializable {
     }
     
     Igra(String n, String a, String g, String l){
-        super();
+    	this(n, a, -1, g, l);
     }
     
     public void setTitle(String n){
