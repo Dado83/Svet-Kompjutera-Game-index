@@ -10,17 +10,29 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javafx.application.Platform;
 
 
 public class Model {
     
-    static HashSet<Igra> gameIndex = new HashSet<>();
-    static String searchResultHTML;
+    private HashSet<Igra> gameIndex = new HashSet<>();
+    private String searchResultHTML;
+    private int numberOfResults;
     
     
-    public static HashSet<Igra> loadGameIndex() {
+    public int getNumberOfResults() {
+    	return numberOfResults;
+    }
+    
+    public void setSearchResultHTML(String search) {
+    	searchResultHTML = search;
+    }
+    
+    public String getSearchResultHTML() {
+		return searchResultHTML;
+	}
+		
+    public HashSet<Igra> getGameIndex() {
         try {
             System.out.println("Pocinjem ucitavat linkove...");
             URL url = new URL("http://fairplay.hol.es/skIgre");
@@ -42,25 +54,24 @@ public class Model {
         }
     
     
-    public static ArrayList<Igra> gameIndexSearch(HashSet<Igra> gameInd, String naslov, String autor, 
+    public ArrayList<Igra> gameIndexSearch(HashSet<Igra> gameInd, String naslov, String autor, 
     									   int ocjena, int god1, int god2)
-    throws FileNotFoundException, IOException {
-        
+    										throws FileNotFoundException, IOException {   
         ArrayList<Igra> gameIndex = new ArrayList<>(gameInd);
         Collections.sort(gameIndex , (Igra o1, Igra o2) -> o2.link.compareTo(o1.link));
         ArrayList<Igra> searchResult = new ArrayList<>();
-
         gameIndex.stream().filter((index) -> ((index.getNaslov().toLowerCase().contains(naslov.toLowerCase()))
         								  && (index.getAutor().toLowerCase().contains(autor.toLowerCase())) 
         								  && (index.getOcjena() >= ocjena) && (index.getGod() >= god1) 
         								  && (index.getGod() <= god2)))
                 .forEachOrdered((i) -> {searchResult.add(i);});
             searchResultHTML = writeToHTML(searchResult);
+            numberOfResults = searchResult.size();
             return searchResult;
         }
      
    
-    public static String writeToHTML(ArrayList<Igra> a) {
+    public String writeToHTML(ArrayList<Igra> a) {
         StringBuilder html = new StringBuilder();
         html.append("<table>");
         html.append("<tr><th>datum</th><th>naslov</th><th>autor</th><th>ocjena</th></tr>");
