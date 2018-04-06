@@ -9,7 +9,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -50,7 +53,7 @@ public class SKController implements Initializable {
   
     SpinnerValueFactory<Integer> min = new SpinnerValueFactory.IntegerSpinnerValueFactory(1998, 2018, 1998);
     SpinnerValueFactory<Integer> max = new SpinnerValueFactory.IntegerSpinnerValueFactory(1998, 2018, 2018);
-    HashSet<Igra> gameIndex = new HashSet<>();
+    Set<Igra> gameIndex = new HashSet<>();
     String message = "uèitavam linkove, može potrajati ako je konekcija spora...";
     String startPage = "<div style='font-size:30px; position:absolute; top:40%; left:20%'>"+ message +"</div>";
     String gameIndexList;
@@ -63,7 +66,7 @@ public class SKController implements Initializable {
         minYear.setValueFactory(min);
         maxYear.setValueFactory(max);
         gameIndex = model.getGameIndex();
-        ArrayList<Igra> gameIndexA = new ArrayList<>(gameIndex);
+        List<Igra> gameIndexA = new ArrayList<>(gameIndex);
         Collections.sort(gameIndexA, (Igra o1, Igra o2) -> o2.link.compareTo(o1.link));
         gameIndexList = model.writeToHTML(gameIndexA);
         browser = webView.getEngine();
