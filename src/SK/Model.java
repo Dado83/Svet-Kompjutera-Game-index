@@ -8,6 +8,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -15,7 +17,7 @@ import javafx.application.Platform;
 
 public class Model {
     
-    private HashSet<Igra> gameIndex = new HashSet<>();
+    private Set<Igra> gameIndex = new HashSet<>();
     private String searchResultHTML;
     private int numberOfResults;
     
@@ -32,7 +34,7 @@ public class Model {
 		return searchResultHTML;
 	}
 		
-    public HashSet<Igra> getGameIndex() {
+    public Set<Igra> getGameIndex() {
         try {
             System.out.println("Pocinjem ucitavat linkove...");
             URL url = new URL("http://fairplay.hol.es/skIgre");
@@ -54,12 +56,12 @@ public class Model {
         }
     
     
-    public ArrayList<Igra> gameIndexSearch(HashSet<Igra> gameInd, String naslov, String autor, 
+    public List<Igra> gameIndexSearch(Set<Igra> gameInd, String naslov, String autor, 
     									   int ocjena, int god1, int god2)
     										throws FileNotFoundException, IOException {   
-        ArrayList<Igra> gameIndex = new ArrayList<>(gameInd);
+        List<Igra> gameIndex = new ArrayList<>(gameInd);
         Collections.sort(gameIndex , (Igra o1, Igra o2) -> o2.link.compareTo(o1.link));
-        ArrayList<Igra> searchResult = new ArrayList<>();
+        List<Igra> searchResult = new ArrayList<>();
         gameIndex.stream().filter((index) -> ((index.getNaslov().toLowerCase().contains(naslov.toLowerCase()))
         								  && (index.getAutor().toLowerCase().contains(autor.toLowerCase())) 
         								  && (index.getOcjena() >= ocjena) && (index.getGod() >= god1) 
@@ -71,7 +73,7 @@ public class Model {
         }
      
    
-    public String writeToHTML(ArrayList<Igra> a) {
+    public String writeToHTML(List<Igra> a) {
         StringBuilder html = new StringBuilder();
         html.append("<table>");
         html.append("<tr><th>datum</th><th>naslov</th><th>autor</th><th>ocjena</th></tr>");
