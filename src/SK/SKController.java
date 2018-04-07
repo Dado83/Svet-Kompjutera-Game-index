@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
-
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -59,9 +59,11 @@ public class SKController implements Initializable {
     String gameIndexList;
     WebEngine browser;
     Model model;
+    private static final Logger LOGGER = Logger.getLogger(SKController.class.getName());
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {	
+    	LOGGER.info("Entering initialize()\n");
     	model = new Model();
         minYear.setValueFactory(min);
         maxYear.setValueFactory(max);
@@ -73,6 +75,7 @@ public class SKController implements Initializable {
         browser.loadContent(gameIndexList);
         model.setSearchResultHTML(gameIndexList);
         numberOfLinks.setText("" + gameIndex.size());
+        LOGGER.info("Leaving initialize()\n");
     }    
      
 
@@ -90,44 +93,48 @@ public class SKController implements Initializable {
     
 
     @FXML
-    public void search() throws IOException {        
-    if (author.getText().isEmpty() && score.getText().isEmpty()) {
-        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-        		title.getText(), "", -1, minYear.getValue(), maxYear.getValue())));
-    } else if (title.getText().isEmpty() && score.getText().isEmpty()) {
-        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-        		"", author.getText(), -1, minYear.getValue(), maxYear.getValue())));
-    } else if (title.getText().isEmpty() && author.getText().isEmpty()) {
-        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-        		"", "", Integer.parseInt(score.getText()), minYear.getValue(), maxYear.getValue())));
-    } else if (title.getText().isEmpty()) {
-        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-        		"", author.getText(), Integer.parseInt(score.getText()), minYear.getValue(), maxYear.getValue())));
-    } else if (author.getText().isEmpty()) {
-        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-        		title.getText(), "", Integer.parseInt(score.getText()), minYear.getValue(), maxYear.getValue())));
-    } else if(score.getText().isEmpty()) {
-        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-        		title.getText(), author.getText(), -1, minYear.getValue(), maxYear.getValue())));
-    } else if (title.getText().isEmpty() && author.getText().isEmpty() && score.getText().isEmpty()) {
-        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-        		"", "", -1, minYear.getValue(), maxYear.getValue())));
-    } else {
-        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-        		title.getText(), author.getText(), Integer.parseInt(score.getText()), 
-        		minYear.getValue(), maxYear.getValue())));
-        }
-    numberOfLinks.setText("" + model.getNumberOfResults());
+    public void search() throws IOException {      
+    	LOGGER.info("Entering search()\n");
+	    if (author.getText().isEmpty() && score.getText().isEmpty()) {
+	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
+	        		title.getText(), "", -1, minYear.getValue(), maxYear.getValue())));
+	    } else if (title.getText().isEmpty() && score.getText().isEmpty()) {
+	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
+	        		"", author.getText(), -1, minYear.getValue(), maxYear.getValue())));
+	    } else if (title.getText().isEmpty() && author.getText().isEmpty()) {
+	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
+	        		"", "", Integer.parseInt(score.getText()), minYear.getValue(), maxYear.getValue())));
+	    } else if (title.getText().isEmpty()) {
+	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
+	        		"", author.getText(), Integer.parseInt(score.getText()), minYear.getValue(), maxYear.getValue())));
+	    } else if (author.getText().isEmpty()) {
+	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
+	        		title.getText(), "", Integer.parseInt(score.getText()), minYear.getValue(), maxYear.getValue())));
+	    } else if(score.getText().isEmpty()) {
+	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
+	        		title.getText(), author.getText(), -1, minYear.getValue(), maxYear.getValue())));
+	    } else if (title.getText().isEmpty() && author.getText().isEmpty() && score.getText().isEmpty()) {
+	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
+	        		"", "", -1, minYear.getValue(), maxYear.getValue())));
+	    } else {
+	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
+	        		title.getText(), author.getText(), Integer.parseInt(score.getText()), 
+	        		minYear.getValue(), maxYear.getValue())));
+	        }
+	    numberOfLinks.setText("" + model.getNumberOfResults());
+	    LOGGER.info("Leaving search()\n");
     }
     
     
     @FXML
     public void saveSearchToDesktop() throws IOException, URISyntaxException {   	
+    	LOGGER.info("Entering saveSearchToDesktop()\n");
         try (BufferedWriter writer = Files.newBufferedWriter(
         		Paths.get(System.getProperty("user.home"), "\\desktop\\SK igre.html"))) {
             writer.write(model.getSearchResultHTML());
             writer.flush();
         } 
+        LOGGER.info("Leaving saveSearchToDesktop()\n");
     }
     
     

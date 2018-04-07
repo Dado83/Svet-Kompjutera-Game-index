@@ -13,10 +13,12 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import sun.util.logging.resources.logging;
 
 
 public class Model {
     
+	private static final Logger LOGGER = Logger.getLogger(Igra.class.getName());
     private Set<Igra> gameIndex = new HashSet<>();
     private String searchResultHTML;
     private int numberOfResults;
@@ -35,30 +37,33 @@ public class Model {
 	}
 		
     public Set<Igra> getGameIndex() {
+    	LOGGER.info("Entering getGameIndex()\n");
         try {
-            System.out.println("Pocinjem ucitavat linkove...");
+        	LOGGER.log(Level.INFO, "Pocinjem ucitavat linkove...\n");
             URL url = new URL("http://fairplay.hol.es/skIgre");
             ObjectInputStream inputStream = new ObjectInputStream(url.openStream());
             gameIndex = (HashSet<Igra>)inputStream.readObject();
-            System.out.println("Broj linkova: " + gameIndex.size());
+            LOGGER.log(Level.INFO, "Broj linkova: " + gameIndex.size() +"\n");
             return gameIndex;
         } catch (MalformedURLException ex) {
-            Logger.getLogger(Igra.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, "URL problem in getGameIndex()\n", ex);
             Platform.exit();
         } catch (IOException ex) {
-            Logger.getLogger(Igra.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, "IO problem in getGameIndex()\n", ex);
             Platform.exit();
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Igra.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, "Class not found in getGameIndex()\n", ex);
             Platform.exit();
         }
-        return null;
+        LOGGER.info("Leaving getGameIndex()\n");
+        return null; 
         }
     
     
     public List<Igra> gameIndexSearch(Set<Igra> gameInd, String naslov, String autor, 
     									   int ocjena, int god1, int god2)
-    										throws FileNotFoundException, IOException {   
+    										throws FileNotFoundException, IOException { 
+    	LOGGER.info("Entering gameIndexSearch()\n");
         List<Igra> gameIndex = new ArrayList<>(gameInd);
         Collections.sort(gameIndex , (Igra o1, Igra o2) -> o2.link.compareTo(o1.link));
         List<Igra> searchResult = new ArrayList<>();
@@ -69,11 +74,13 @@ public class Model {
                 .forEachOrdered((i) -> {searchResult.add(i);});
             searchResultHTML = writeToHTML(searchResult);
             numberOfResults = searchResult.size();
+            LOGGER.info("Leaving gameIndexSearch()\n");
             return searchResult;
         }
      
    
     public String writeToHTML(List<Igra> a) {
+    	LOGGER.info("Entering writeToHTML()\n");
         StringBuilder html = new StringBuilder();
         html.append("<table>");
         html.append("<tr><th>datum</th><th>naslov</th><th>autor</th><th>ocjena</th></tr>");
@@ -83,6 +90,7 @@ public class Model {
                     .append(i.getOcjena()).append("</td></tr>");
         });
         html.append("</table>");
+        LOGGER.info("Leaving writeToHTML()\n");
         return html.toString(); 
      }
     
