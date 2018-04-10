@@ -19,7 +19,7 @@ import sun.util.logging.resources.logging;
 public class Model {
     
 	private static final Logger LOGGER = Logger.getLogger(Igra.class.getName());
-    private Set<Igra> gameIndex = new HashSet<>();
+    private Set<Igra> gameIndex;
     private String searchResultHTML;
     private int numberOfResults;
     

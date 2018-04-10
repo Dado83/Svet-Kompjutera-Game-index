@@ -12,7 +12,7 @@ public class Igra implements Serializable {
     private String godina;
     String link;
     
-    Igra(String n, String a, int o, String g, String l){
+    public Igra(String n, String a, int o, String g, String l){
     	naslov = n;
         autor = a;
         ocjena = o;
@@ -20,7 +20,7 @@ public class Igra implements Serializable {
         link = l;
     }
     
-    Igra(String n, String a, String g, String l){
+    public Igra(String n, String a, String g, String l){
     	this(n, a, -1, g, l);
     }
     
