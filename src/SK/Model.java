@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import sun.util.logging.resources.logging;
 
 
 public class Model {
@@ -36,13 +35,14 @@ public class Model {
 		return searchResultHTML;
 	}
 		
-    public Set<Igra> getGameIndex() {
+    @SuppressWarnings("unchecked")
+	public Set<Igra> getGameIndex() {
     	LOGGER.info("Entering getGameIndex()\n");
         try {
         	LOGGER.log(Level.INFO, "Pocinjem ucitavat linkove...\n");
             URL url = new URL("http://fairplay.hol.es/skIgre");
-            ObjectInputStream inputStream = new ObjectInputStream(url.openStream());
-            gameIndex = (HashSet<Igra>)inputStream.readObject();
+            ObjectInputStream inputStream = new ObjectInputStream(url.openStream());       
+			gameIndex = (HashSet<Igra>) inputStream.readObject();
             LOGGER.log(Level.INFO, "Broj linkova: " + gameIndex.size() +"\n");
             return gameIndex;
         } catch (MalformedURLException ex) {
