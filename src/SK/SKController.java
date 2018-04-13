@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import org.graalvm.compiler.debug.TTY;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -61,6 +64,7 @@ public class SKController implements Initializable {
     Model model;
     private static final Logger LOGGER = Logger.getLogger(SKController.class.getName());
     
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {	
     	LOGGER.info("Entering initialize()\n");
@@ -91,38 +95,21 @@ public class SKController implements Initializable {
         numberOfLinks.setText("" + gameIndex.size());
     }
     
-
+    
     @FXML
-    public void search() throws IOException {      
+    public void search() throws IOException {
     	LOGGER.info("Entering search()\n");
-	    if (author.getText().isEmpty() && score.getText().isEmpty()) {
-	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-	        		title.getText(), "", -1, minYear.getValue(), maxYear.getValue())));
-	    } else if (title.getText().isEmpty() && score.getText().isEmpty()) {
-	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-	        		"", author.getText(), -1, minYear.getValue(), maxYear.getValue())));
-	    } else if (title.getText().isEmpty() && author.getText().isEmpty()) {
-	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-	        		"", "", Integer.parseInt(score.getText()), minYear.getValue(), maxYear.getValue())));
-	    } else if (title.getText().isEmpty()) {
-	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-	        		"", author.getText(), Integer.parseInt(score.getText()), minYear.getValue(), maxYear.getValue())));
-	    } else if (author.getText().isEmpty()) {
-	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-	        		title.getText(), "", Integer.parseInt(score.getText()), minYear.getValue(), maxYear.getValue())));
-	    } else if(score.getText().isEmpty()) {
-	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-	        		title.getText(), author.getText(), -1, minYear.getValue(), maxYear.getValue())));
-	    } else if (title.getText().isEmpty() && author.getText().isEmpty() && score.getText().isEmpty()) {
-	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-	        		"", "", -1, minYear.getValue(), maxYear.getValue())));
-	    } else {
-	        browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, 
-	        		title.getText(), author.getText(), Integer.parseInt(score.getText()), 
-	        		minYear.getValue(), maxYear.getValue())));
-	        }
-	    numberOfLinks.setText("" + model.getNumberOfResults());
-	    LOGGER.info("Leaving search()\n");
+    	int scoreValue;
+    	if (score.getText().isEmpty()) {
+			scoreValue = -1;
+		} else {
+			scoreValue = Integer.parseInt(score.getText());
+		}
+    	browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, title.getText(), 
+    											author.getText(), scoreValue, minYear.getValue(), 
+    											maxYear.getValue())));
+    	numberOfLinks.setText("" + model.getNumberOfResults());
+    	LOGGER.info("Leaving search()\n");
     }
     
     
