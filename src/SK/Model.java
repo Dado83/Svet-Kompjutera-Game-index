@@ -1,18 +1,24 @@
 package SK;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import javafx.application.Platform;
+
 
 
 public class Model {
@@ -38,21 +44,27 @@ public class Model {
     @SuppressWarnings("unchecked")
 	public Set<Igra> getGameIndex() {
     	LOGGER.info("Entering getGameIndex()\n");
+    	StringBuilder gameIndexGson;
         try {
         	LOGGER.log(Level.INFO, "Pocinjem ucitavat linkove...\n");
-            URL url = new URL("http://fairplay.hol.es/skIgre");
-            ObjectInputStream inputStream = new ObjectInputStream(url.openStream());       
-			gameIndex = (HashSet<Igra>) inputStream.readObject();
-            LOGGER.log(Level.INFO, "Broj linkova: " + gameIndex.size() +"\n");
+            URL url = new URL("http://fairplay.hol.es/SKGameIndex.txt");
+            Gson gson = new Gson();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
+            String string = "";
+            gameIndexGson = new StringBuilder();
+            while ((string = reader.readLine()) != null) {
+            	gameIndexGson.append(string);
+            	}
+            }     
+            Type token = new TypeToken<Set<Igra>>() {}.getType();
+            gameIndex = (Set<Igra>) gson.fromJson(gameIndexGson.toString(), token);
+            LOGGER.log(Level.INFO, "Broj linkova: " + gameIndex.size() +"\n"); 
             return gameIndex;
         } catch (MalformedURLException ex) {
             LOGGER.log(Level.SEVERE, "URL problem in getGameIndex()\n", ex);
             Platform.exit();
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, "IO problem in getGameIndex()\n", ex);
-            Platform.exit();
-        } catch (ClassNotFoundException ex) {
-            LOGGER.log(Level.SEVERE, "Class not found in getGameIndex()\n", ex);
             Platform.exit();
         }
         LOGGER.info("Leaving getGameIndex()\n");
