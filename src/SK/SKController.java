@@ -1,7 +1,10 @@
 package SK;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -28,6 +31,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 
 public class SKController implements Initializable {
@@ -53,7 +58,7 @@ public class SKController implements Initializable {
   
     SpinnerValueFactory<Integer> min = new SpinnerValueFactory.IntegerSpinnerValueFactory(1998, 2018, 1998);
     SpinnerValueFactory<Integer> max = new SpinnerValueFactory.IntegerSpinnerValueFactory(1998, 2018, 2018);
-    Set<Igra> gameIndex = new HashSet<>();
+    Set<GameReview> gameIndex = new HashSet<>();
     String message = "uèitavam linkove, može potrajati ako je konekcija spora...";
     String startPage = "<div style='font-size:30px; position:absolute; top:40%; left:20%'>"+ message +"</div>";
     String gameIndexList;
@@ -69,14 +74,14 @@ public class SKController implements Initializable {
         minYear.setValueFactory(min);
         maxYear.setValueFactory(max);
         gameIndex = model.getGameIndex();
-        List<Igra> gameIndexA = new ArrayList<>(gameIndex);
-        Collections.sort(gameIndexA, (Igra o1, Igra o2) -> o2.link.compareTo(o1.link));
+        List<GameReview> gameIndexA = new ArrayList<>(gameIndex);
+        Collections.sort(gameIndexA, (GameReview o1, GameReview o2) -> o2.getLink().compareTo(o1.getLink()));
         gameIndexList = model.writeToHTML(gameIndexA);
         browser = webView.getEngine();
         browser.loadContent(gameIndexList);
         model.setSearchResultHTML(gameIndexList);
         numberOfLinks.setText("" + gameIndex.size());
-        LOGGER.info("Leaving initialize()\n");
+        LOGGER.info("Leaving initialize()\n"); 
     }    
      
 
@@ -113,8 +118,8 @@ public class SKController implements Initializable {
     @FXML
     public void saveSearchToDesktop() throws IOException, URISyntaxException {   	
     	LOGGER.info("Entering saveSearchToDesktop()\n");
-        try (BufferedWriter writer = Files.newBufferedWriter(
-        		Paths.get(System.getProperty("user.home"), "\\desktop\\SK igre.html"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(
+        		new File(System.getProperty("user.home"), "\\desktop\\SK igre.html")))) {
             writer.write(model.getSearchResultHTML());
             writer.flush();
         } 

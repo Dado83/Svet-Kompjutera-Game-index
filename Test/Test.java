@@ -1,17 +1,15 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.Set;
-
 import org.junit.Before;
-
-import SK.Igra;
+import SK.GameReview;
 import SK.Model;
 
 class Test {
 
-	Igra igra = new Igra("naslov", "autor", 90, "2018", "www.link.com");
+	GameReview igra = new GameReview("naslov", "autor", 90, "2018", "www.link.com");
 	Model model = new Model();
-	Set<Igra> modelSet;
+	Set<GameReview> modelSet;
 	
 	@Before
 	private void init() {
@@ -20,10 +18,10 @@ class Test {
 	
 	@org.junit.jupiter.api.Test
 	void testIgra() {
-		assertEquals("naslov", igra.getNaslov());
-		assertEquals("autor", igra.getAutor());
-		assertEquals(90, igra.getOcjena());
-		assertEquals("2018", igra.getGodina());
+		assertEquals("naslov", igra.getTitle());
+		assertEquals("autor", igra.getAuthor());
+		assertEquals(90, igra.getScore());
+		assertEquals("2018", igra.getYear());
 	}
 	
 	@org.junit.jupiter.api.Test

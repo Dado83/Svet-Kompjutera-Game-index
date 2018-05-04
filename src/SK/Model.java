@@ -23,8 +23,8 @@ import javafx.application.Platform;
 
 public class Model {
     
-	private static final Logger LOGGER = Logger.getLogger(Igra.class.getName());
-    private Set<Igra> gameIndex;
+	private static final Logger LOGGER = Logger.getLogger(Model.class.getName());
+    private Set<GameReview> gameIndex;
     private String searchResultHTML;
     private int numberOfResults;
     
@@ -42,7 +42,7 @@ public class Model {
 	}
 		
     @SuppressWarnings("unchecked")
-	public Set<Igra> getGameIndex() {
+	public Set<GameReview> getGameIndex() {
     	LOGGER.info("Entering getGameIndex()\n");
     	StringBuilder gameIndexGson;
         try {
@@ -56,8 +56,8 @@ public class Model {
             	gameIndexGson.append(string);
             	}
             }     
-            Type token = new TypeToken<Set<Igra>>() {}.getType();
-            gameIndex = (Set<Igra>) gson.fromJson(gameIndexGson.toString(), token);
+            Type token = new TypeToken<Set<GameReview>>() {}.getType();
+            gameIndex = (Set<GameReview>) gson.fromJson(gameIndexGson.toString(), token);
             LOGGER.log(Level.INFO, "Broj linkova: " + gameIndex.size() +"\n"); 
             return gameIndex;
         } catch (MalformedURLException ex) {
@@ -72,17 +72,16 @@ public class Model {
         }
     
     
-    public List<Igra> gameIndexSearch(Set<Igra> gameInd, String naslov, String autor, 
-    									   int ocjena, int god1, int god2)
-    										throws FileNotFoundException, IOException { 
+    public List<GameReview> gameIndexSearch(Set<GameReview> gameInd, String naslov, String autor, 
+    		int ocjena, int god1, int god2) throws FileNotFoundException, IOException { 
     	LOGGER.info("Entering gameIndexSearch()\n");
-        List<Igra> gameIndex = new ArrayList<>(gameInd);
-        Collections.sort(gameIndex , (Igra o1, Igra o2) -> o2.link.compareTo(o1.link));
-        List<Igra> searchResult = new ArrayList<>();
-        gameIndex.stream().filter((index) -> ((index.getNaslov().toLowerCase().contains(naslov.toLowerCase()))
-        								  && (index.getAutor().toLowerCase().contains(autor.toLowerCase())) 
-        								  && (index.getOcjena() >= ocjena) && (index.getGod() >= god1) 
-        								  && (index.getGod() <= god2)))
+        List<GameReview> gameIndex = new ArrayList<>(gameInd);
+        Collections.sort(gameIndex , (GameReview o1, GameReview o2) -> o2.getLink().compareTo(o1.getLink()));
+        List<GameReview> searchResult = new ArrayList<>();
+        gameIndex.stream().filter((index) -> ((index.getTitle().toLowerCase().contains(naslov.toLowerCase()))
+        								  && (index.getAuthor().toLowerCase().contains(autor.toLowerCase())) 
+        								  && (index.getScore() >= ocjena) && (index.getYear() >= god1) 
+        								  && (index.getYear() <= god2)))
                 .forEachOrdered((i) -> {searchResult.add(i);});
             searchResultHTML = writeToHTML(searchResult);
             numberOfResults = searchResult.size();
@@ -91,15 +90,15 @@ public class Model {
         }
      
    
-    public String writeToHTML(List<Igra> a) {
+    public String writeToHTML(List<GameReview> a) {
     	LOGGER.info("Entering writeToHTML()\n");
         StringBuilder html = new StringBuilder();
         html.append("<table>");
         html.append("<tr><th>datum</th><th>naslov</th><th>autor</th><th>ocjena</th></tr>");
         a.forEach((i) -> {
-            html.append("<tr><td>").append(i.getGodina()).append("</td><td><a href=").append(i.link).append(">")
-                    .append(i.getNaslov()).append("</a></td><td>").append(i.getAutor()).append("</td><td>")
-                    .append(i.getOcjena()).append("</td></tr>");
+            html.append("<tr><td>").append(i.getDate()).append("</td><td><a href=").append(i.getLink()).append(">")
+                    .append(i.getTitle()).append("</a></td><td>").append(i.getAuthor()).append("</td><td>")
+                    .append(i.getScore()).append("</td></tr>");
         });
         html.append("</table>");
         LOGGER.info("Leaving writeToHTML()\n");
