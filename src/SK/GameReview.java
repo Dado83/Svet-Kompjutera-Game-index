@@ -1,5 +1,6 @@
 package SK;
 
+
 public class GameReview{
 	
     private String title;

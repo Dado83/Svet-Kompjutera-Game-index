@@ -9,16 +9,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import javafx.application.Platform;
-
 
 
 public class Model {
@@ -40,7 +38,8 @@ public class Model {
     public String getSearchResultHTML() {
 		return searchResultHTML;
 	}
-		
+	
+    
     @SuppressWarnings("unchecked")
 	public Set<GameReview> getGameIndex() {
     	LOGGER.info("Entering getGameIndex()\n");
@@ -62,13 +61,13 @@ public class Model {
             return gameIndex;
         } catch (MalformedURLException ex) {
             LOGGER.log(Level.SEVERE, "URL problem in getGameIndex()\n", ex);
-            Platform.exit();
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, "IO problem in getGameIndex()\n", ex);
-            Platform.exit();
         }
         LOGGER.info("Leaving getGameIndex()\n");
-        return null; 
+        Set<GameReview> set = new HashSet<>();
+        set.add(new GameReview("", "", "Slaba konekcija, ne mogu uèitati linkove...", ""));
+        return set; 
         }
     
     

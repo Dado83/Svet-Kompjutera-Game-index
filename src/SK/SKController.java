@@ -4,11 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,8 +28,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 
 public class SKController implements Initializable {
@@ -73,18 +68,17 @@ public class SKController implements Initializable {
     	model = new Model();
         minYear.setValueFactory(min);
         maxYear.setValueFactory(max);
+        browser = webView.getEngine();
         gameIndex = model.getGameIndex();
         List<GameReview> gameIndexA = new ArrayList<>(gameIndex);
         Collections.sort(gameIndexA, (GameReview o1, GameReview o2) -> o2.getLink().compareTo(o1.getLink()));
         gameIndexList = model.writeToHTML(gameIndexA);
-        browser = webView.getEngine();
-        browser.loadContent(gameIndexList);
-        model.setSearchResultHTML(gameIndexList);
         numberOfLinks.setText("" + gameIndex.size());
         LOGGER.info("Leaving initialize()\n"); 
+        browser.loadContent(gameIndexList);
     }    
-     
-
+    
+   
     @FXML
     public void reset() { 	
         browser.loadContent(gameIndexList);
@@ -108,8 +102,7 @@ public class SKController implements Initializable {
 			scoreValue = Integer.parseInt(score.getText());
 		}
     	browser.loadContent(model.writeToHTML(model.gameIndexSearch(gameIndex, title.getText(), 
-    											author.getText(), scoreValue, minYear.getValue(), 
-    											maxYear.getValue())));
+    			author.getText(), scoreValue, minYear.getValue(), maxYear.getValue())));
     	numberOfLinks.setText("" + model.getNumberOfResults());
     	LOGGER.info("Leaving search()\n");
     }
