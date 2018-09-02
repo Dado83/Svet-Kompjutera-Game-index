@@ -54,7 +54,7 @@ public class SKController implements Initializable {
     SpinnerValueFactory<Integer> min = new SpinnerValueFactory.IntegerSpinnerValueFactory(1998, 2018, 1998);
     SpinnerValueFactory<Integer> max = new SpinnerValueFactory.IntegerSpinnerValueFactory(1998, 2018, 2018);
     Set<GameReview> gameIndex = new HashSet<>();
-    String message = "uËitavam linkove, moûe potrajati ako je konekcija spora...";
+    String message = "uƒçitavam linkove, mo≈æe potrajati ako je konekcija spora...";
     String startPage = "<div style='font-size:30px; position:absolute; top:40%; left:20%'>"+ message +"</div>";
     String gameIndexList;
     WebEngine browser;
