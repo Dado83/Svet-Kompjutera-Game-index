@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package updatereview;
 
 import com.google.gson.Gson;
@@ -43,11 +38,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
-/**
- * FXML Controller class
- *
- * @author PC-Admin
- */
 public class UpdateController implements Initializable {
 
     @FXML
@@ -60,25 +50,14 @@ public class UpdateController implements Initializable {
     private Label loadedIndexes;
     @FXML
     private Label indexSize;
-    
-
-    ArrayList<GameReview> ii;
     @FXML
     private Label avgIterTime;
     @FXML
     private Label timeNeededToUpdate;
     @FXML
     private Label timeRemaining;
-
-    StringProperty iter = new SimpleStringProperty();
-    StringProperty ukVr = new SimpleStringProperty();
-    StringProperty preostaloVrijeme = new SimpleStringProperty();
-    StringProperty protekloVr = new SimpleStringProperty();
-    StringProperty nasIsp = new SimpleStringProperty();
-    StringProperty ispravljeno = new SimpleStringProperty();
-    StringProperty brojIgara = new SimpleStringProperty();
-    StringProperty ucitanihIgara = new SimpleStringProperty();
-
+    @FXML
+    private Label correctedTitles;
     @FXML
     private Label timeElapsed;
     @FXML
@@ -86,41 +65,42 @@ public class UpdateController implements Initializable {
     @FXML
     private Button update;
 
-    int step;
-    int ispr;
-    @FXML
-    private Label correctedTitles;
-
-    Thread links;
-    Task loadLinks;
-    HashSet<GameReview> igre = new HashSet<>();
+    StringProperty iteration = new SimpleStringProperty();
+    StringProperty totalTime = new SimpleStringProperty();
+    StringProperty remainingTime = new SimpleStringProperty();
+    StringProperty elapsedT = new SimpleStringProperty();
+    StringProperty correctedTitle = new SimpleStringProperty();
+    StringProperty corrected = new SimpleStringProperty();
+    StringProperty numberOfGames = new SimpleStringProperty();
+    StringProperty loadedGames = new SimpleStringProperty();
 
     private static final Logger LOGGER = Logger.getLogger(UpdateController.class.getName());
-    private List<String> linkURLs = new ArrayList<>();
-    private int size;
-    private Set<GameReview> games = new HashSet<>();
+
+    private int step;
+    private int correct;
     private long elapsedTime;
-    private long startTime;
+
+    private List<String> linkURLs = new ArrayList<>();
+    private Set<GameReview> games = new HashSet<>();
     private List<Double> avgSingleIndexLoadTime = new ArrayList<>();
 
-    /**
-     * Initializes the controller class.
-     */
+    Thread updateThread;
+    Task loadLinksTask;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
         LOGGER.info("entering loadLinksURLs()");
         LOGGER.info("Povezujem se na SK\n...ucitavam linkove...");
-        Element temp = null;
+        Element element = null;
 
         try {
-            temp = Jsoup.connect("http://www.sk.rs/indexes/sections/op.html").get();
+            element = Jsoup.connect("http://www.sk.rs/indexes/sections/op.html").get();
         } catch (IOException e1) {
             LOGGER.severe("ERROR in jsoup connect to SK");
         }
-        Elements links = temp.select("a[href]");
+        Elements elements = element.select("a[href]");
 
-        links.forEach((e) -> {
+        elements.forEach((e) -> {
             linkURLs.add("http://www.sk.rs" + e.attr("href").substring(5));
         });
         LOGGER.info("Broj linkova prije filtera: " + linkURLs.size());
@@ -131,37 +111,36 @@ public class UpdateController implements Initializable {
 
     }
 
-    //update sa neta
     @FXML
     public void saveToFile() throws IOException, InterruptedException {
-
         update.setDisable(true);
 
-        loadLinks = new Task() {
+        loadLinksTask = new Task() {
 
             @Override
             protected Object call() throws Exception {
-
-                long mjerenje = System.nanoTime();
+                long startTime = System.nanoTime();
 
                 int size = linkURLs.size();
-                brojIgara.set(size + "");
-                for (int br = 0; br < linkURLs.size(); br++) {
-                    long start = System.nanoTime();
-                    step = br;
-                    games.add(setGameReviewData(linkURLs.get(br)));
+                numberOfGames.set(size + "");
+
+                for (int num = 0; num < linkURLs.size(); num++) {
+                    long startOfIteration = System.nanoTime();
+                    step = num;
+
+                    games.add(setGameReviewData(linkURLs.get(num)));
                     LOGGER.info("Ucitanih igara: " + games.size() + "/" + linkURLs.size());
 
-                    double result = System.nanoTime() - start;
+                    double result = System.nanoTime() - startOfIteration;
                     LOGGER.info("Vreme potrebno za 1 iteraciju: " + result / 1000000000 + " sekundi.");
 
                     int timeNeededToComplete = (int) (((result * size) / 1000000000) / 60);
                     LOGGER.info("Potrebno vreme za ucitavanje svih linkova: " + timeNeededToComplete + " minuta.");
 
-                    int remainingTime = (int) (((result * (size - step)) / 1000000000) / 60);
-                    LOGGER.info("Potrebno vreme za ucitavanje ostatka linkova: " + remainingTime + " minuta.");
+                    int timeLefttoComplete = (int) (((result * (size - step)) / 1000000000) / 60);
+                    LOGGER.info("Potrebno vreme za ucitavanje ostatka linkova: " + timeLefttoComplete + " minuta.");
 
-                    elapsedTime = (start - mjerenje) / 1000000000 / 60;
+                    elapsedTime = (startOfIteration - startTime) / 1000000000 / 60;
                     LOGGER.info("Proteklo vrijeme ucitavanja linkova... " + elapsedTime);
 
                     avgSingleIndexLoadTime.add(result / 1000000000);
@@ -171,56 +150,58 @@ public class UpdateController implements Initializable {
                     if ((step % 10) == 0) {
                         Platform.runLater(() -> {
 
-                            iter.set("" + result);
-                            ukVr.set("" + timeNeededToComplete);
-                            preostaloVrijeme.set("" + remainingTime);
-                            protekloVr.set("" + elapsedTime);
+                            iteration.set("" + result);
+                            totalTime.set("" + timeNeededToComplete);
+                            remainingTime.set("" + timeLefttoComplete);
+                            elapsedT.set("" + elapsedTime);
 
                         });
+
                     } else {
                         Platform.runLater(() -> {
-                            ucitanihIgara.set("" + step);
+                            loadedGames.set("" + step);
                         });
 
                     }
                     step++;
                 }
-
                 return null;
-
             }
         };
 
-        Task ispraviNaslove = new Task() {
+        Task correctTitleTask = new Task() {
             @Override
             protected Object call() throws Exception {
                 step = 1;
-                ispr = 0;
+                correct = 0;
                 int size = games.size();
+
                 for (GameReview i : games) {
                     if (i.getTitle().contains("http") || i.getTitle().equals("")) {
-                        Element doc = null;
+                        Element element = null;
                         try {
-                            doc = Jsoup.connect(i.getLink()).get();
+                            element = Jsoup.connect(i.getLink()).get();
                         } catch (IOException e1) {
                             LOGGER.severe("error connecting to game link using jsoup");
                         }
-                        Elements date = doc.select("img[alt]");
-                        List<Element> alt = new ArrayList<>();
+                        Elements date = element.select("img[alt]");
+                        List<Element> titleAttribute = new ArrayList<>();
                         date.forEach((e) -> {
-                            alt.add(e);
+                            titleAttribute.add(e);
                         });
-                        if (alt.size() < 10) {
+                        if (titleAttribute.size() < 10) {
                         } else {
-                            i.setTitle(alt.get(9).attr("alt"));
+                            i.setTitle(titleAttribute.get(9).attr("alt"));
                         }
                         LOGGER.info(i.getTitle() + " ...ISPRAVLJEN");
-                        ispr++;
+                        correct++;
                     }
+
                     Platform.runLater(() -> {
-                        nasIsp.set(i.getTitle() + " ...ISPRAVLJEN");
-                        ispravljeno.set("" + ispr);
+                        correctedTitle.set(i.getTitle() + " ...ISPRAVLJEN");
+                        corrected.set("" + correct);
                     });
+
                     updateProgress(step, size);
                     step++;
                 }
@@ -228,11 +209,12 @@ public class UpdateController implements Initializable {
             }
         };
 
-        ispraviNaslove.setOnSucceeded(
+        correctTitleTask.setOnSucceeded(
                 (e) -> {
                     try {
                         Gson gson = new Gson();
-                        Type type = new TypeToken<Set<GameReview>>() {}.getType();
+                        Type type = new TypeToken<Set<GameReview>>() {
+                        }.getType();
                         FileChooser fc = new FileChooser();
                         String desktop = System.getProperty("user.home") + "/desktop";
                         File file = new File(desktop);
@@ -242,14 +224,13 @@ public class UpdateController implements Initializable {
                         fc.setTitle("Snimi kao 'skIgre'");
                         fc.setInitialFileName("SKGameIndex");
                         Stage stage = (Stage) root.getScene().getWindow();
-                        File file1 = fc.showSaveDialog(stage);
-                        OutputStream outStream = new FileOutputStream(file1);
+                        File saveFile = fc.showSaveDialog(stage);
+                        OutputStream outStream = new FileOutputStream(saveFile);
                         Writer streamWriter = new OutputStreamWriter(outStream, Charset.forName("utf-8").newEncoder());
                         try (BufferedWriter writer = new BufferedWriter(streamWriter)) {
                             String toJson = gson.toJson(games, type);
                             writer.write(toJson);
                         }
-
                     } catch (IOException ee) {
                         LOGGER.severe("nisam snimio fajl");
                         ee.getLocalizedMessage();
@@ -257,51 +238,52 @@ public class UpdateController implements Initializable {
                 }
         );
 
-        loadLinks.setOnSucceeded(
+        loadLinksTask.setOnSucceeded(
                 (e) -> {
-                    Thread naslovi = new Thread(ispraviNaslove);
-                    naslovi.setDaemon(true);
-                    naslovi.start();
+                    Thread titleThread = new Thread(correctTitleTask);
+                    titleThread.setDaemon(true);
+                    titleThread.start();
                 }
         );
-        links = new Thread(loadLinks);
 
-        links.setDaemon(true);
-        links.start();
+        updateThread = new Thread(loadLinksTask);
+        updateThread.setDaemon(true);
+        updateThread.start();
 
-        progressBar.progressProperty().bind(loadLinks.progressProperty());
-        progressIndicator.progressProperty().bind(ispraviNaslove.progressProperty());
-        loadedIndexes.textProperty().bind(ucitanihIgara);
-        indexSize.textProperty().bind(brojIgara);
-        avgIterTime.textProperty().bind(iter);
-        timeNeededToUpdate.textProperty().bind(ukVr);
-        timeRemaining.textProperty().bind(preostaloVrijeme);
-        timeElapsed.textProperty().bind(protekloVr);
-        title.textProperty().bind(nasIsp);
-        correctedTitles.textProperty().bind(ispravljeno);
+        progressBar.progressProperty().bind(loadLinksTask.progressProperty());
+        progressIndicator.progressProperty().bind(correctTitleTask.progressProperty());
+        loadedIndexes.textProperty().bind(loadedGames);
+        indexSize.textProperty().bind(numberOfGames);
+        avgIterTime.textProperty().bind(iteration);
+        timeNeededToUpdate.textProperty().bind(totalTime);
+        timeRemaining.textProperty().bind(remainingTime);
+        timeElapsed.textProperty().bind(elapsedT);
+        title.textProperty().bind(correctedTitle);
+        correctedTitles.textProperty().bind(corrected);
     }
 
     private GameReview setGameReviewData(String link) {
         LOGGER.info("entering setData()");
         LOGGER.info("adding " + link);
         GameReview game = null;
-        Element doc = null;
+        Element element = null;
         try {
-            doc = Jsoup.connect(link).get();
+            element = Jsoup.connect(link).get();
         } catch (IOException e1) {
             LOGGER.severe("ERROR in 'doc = Jsoup.connect(link).get();'");
         }
 
-        Elements title = doc.select(".na");
-        Elements score = doc.select(".oc");
-        Elements author = doc.select(".pd");
-        Elements date = doc.select("img[alt]");
-        Elements platform = doc.select(".kz");
+        Elements title = element.select(".na");
+        Elements score = element.select(".oc");
+        Elements author = element.select(".pd");
+        Elements date = element.select("img[alt]");
+        Elements platform = element.select(".kz");
 
         List<Element> dateTemp = new ArrayList<>();
         date.forEach((e) -> {
             dateTemp.add(e);
         });
+
         String year = "";
         year = dateTemp.stream().filter((e) -> (e.attr("alt").matches("[0-9]+"))).map((e) -> e.attr("alt") + ".")
                 .reduce(year, String::concat);
