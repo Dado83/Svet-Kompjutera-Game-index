@@ -1,33 +1,35 @@
 
 import java.util.Set;
 import org.junit.Before;
-import SK.GameReview;
-import SK.Model;
+import gamereview.GameReview;
+import gamereview.Model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 
-class Test {
+public class Test {
 
-    GameReview igra = new GameReview("naslov", "autor", 90, "2018", "www.link.com");
+    GameReview igra = new GameReview("naslov", "autor", "90", "04.2018", "www.link.com", "PC");
     Model model = new Model();
     Set<GameReview> modelSet;
 
     @Before
-    private void init() {
+    public void init() {
         modelSet = model.getGameIndex();
     }
 
     @org.junit.Test
-    void testIgra() {
+    public void testIgra() {
         assertEquals("naslov", igra.getTitle());
         assertEquals("autor", igra.getAuthor());
-        assertEquals(90, igra.getScore());
-        assertEquals("2018", igra.getYear());
+        assertEquals("90", igra.getScore());
+        assertEquals(2018, igra.getYear());
+        assertEquals("www.link.com", igra.getLink());
+        assertEquals("PC", igra.getPlatform());
     }
 
     @org.junit.Test
-    void testModel() {
+    public void testModel() {
         assertNotNull(model.getGameIndex());
     }
 
