@@ -23,7 +23,7 @@ import com.google.gson.reflect.TypeToken;
 public class Model {
 
     private static final Logger LOGGER = Logger.getLogger(Model.class.getName());
-    private Set<GameReview> gameIndex;
+    private Set<GameReview> gameIndexSet;
     private String searchResultHTML;
     private int numberOfResults;
 
@@ -57,9 +57,9 @@ public class Model {
             }
             Type token = new TypeToken<Set<GameReview>>() {
             }.getType();
-            gameIndex = (Set<GameReview>) gson.fromJson(gameIndexGson.toString(), token);
-            LOGGER.log(Level.INFO, "Broj linkova: {0}\n", gameIndex.size());
-            return gameIndex;
+            gameIndexSet = (Set<GameReview>) gson.fromJson(gameIndexGson.toString(), token);
+            LOGGER.log(Level.INFO, "Broj linkova: {0}\n", gameIndexSet.size());
+            return gameIndexSet;
         } catch (MalformedURLException ex) {
             LOGGER.log(Level.SEVERE, "URL problem in getGameIndex()\n", ex);
         } catch (IOException ex) {
