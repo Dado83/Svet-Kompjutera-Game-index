@@ -51,26 +51,24 @@ import org.jsoup.select.Elements;
 public class UpdateController implements Initializable {
 
     @FXML
-    private AnchorPane pane;
+    private AnchorPane root;
     @FXML
     private ProgressBar progressBar;
     @FXML
     private ProgressIndicator progressIndicator;
     @FXML
-    private Label label;
+    private Label loadedIndexes;
     @FXML
-    private Label brojLinkova;
-    private int linkovi;
-
-    private int br;
+    private Label indexSize;
+    
 
     ArrayList<GameReview> ii;
     @FXML
-    private Label iteracija;
+    private Label avgIterTime;
     @FXML
-    private Label ukupnoVr;
+    private Label timeNeededToUpdate;
     @FXML
-    private Label preostaloVr;
+    private Label timeRemaining;
 
     StringProperty iter = new SimpleStringProperty();
     StringProperty ukVr = new SimpleStringProperty();
@@ -82,16 +80,16 @@ public class UpdateController implements Initializable {
     StringProperty ucitanihIgara = new SimpleStringProperty();
 
     @FXML
-    private Label protekloVrijeme;
+    private Label timeElapsed;
     @FXML
-    private Label naslov;
+    private Label title;
     @FXML
     private Button update;
 
     int step;
     int ispr;
     @FXML
-    private Label isprNaslova;
+    private Label correctedTitles;
 
     Thread links;
     Task loadLinks;
@@ -243,7 +241,7 @@ public class UpdateController implements Initializable {
                         fc.setInitialDirectory(file);
                         fc.setTitle("Snimi kao 'skIgre'");
                         fc.setInitialFileName("SKGameIndex");
-                        Stage stage = (Stage) pane.getScene().getWindow();
+                        Stage stage = (Stage) root.getScene().getWindow();
                         File file1 = fc.showSaveDialog(stage);
                         OutputStream outStream = new FileOutputStream(file1);
                         Writer streamWriter = new OutputStreamWriter(outStream, Charset.forName("utf-8").newEncoder());
@@ -273,14 +271,14 @@ public class UpdateController implements Initializable {
 
         progressBar.progressProperty().bind(loadLinks.progressProperty());
         progressIndicator.progressProperty().bind(ispraviNaslove.progressProperty());
-        label.textProperty().bind(ucitanihIgara);
-        brojLinkova.textProperty().bind(brojIgara);
-        iteracija.textProperty().bind(iter);
-        ukupnoVr.textProperty().bind(ukVr);
-        preostaloVr.textProperty().bind(preostaloVrijeme);
-        protekloVrijeme.textProperty().bind(protekloVr);
-        naslov.textProperty().bind(nasIsp);
-        isprNaslova.textProperty().bind(ispravljeno);
+        loadedIndexes.textProperty().bind(ucitanihIgara);
+        indexSize.textProperty().bind(brojIgara);
+        avgIterTime.textProperty().bind(iter);
+        timeNeededToUpdate.textProperty().bind(ukVr);
+        timeRemaining.textProperty().bind(preostaloVrijeme);
+        timeElapsed.textProperty().bind(protekloVr);
+        title.textProperty().bind(nasIsp);
+        correctedTitles.textProperty().bind(ispravljeno);
     }
 
     private GameReview setGameReviewData(String link) {
