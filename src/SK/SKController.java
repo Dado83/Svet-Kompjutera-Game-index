@@ -61,13 +61,16 @@ public class SKController implements Initializable {
 
     SpinnerValueFactory<Integer> min = new SpinnerValueFactory.IntegerSpinnerValueFactory(1998, 2018, 1998);
     SpinnerValueFactory<Integer> max = new SpinnerValueFactory.IntegerSpinnerValueFactory(1998, 2018, 2018);
+
+    private static final Logger LOGGER = Logger.getLogger(SKController.class.getName());
+
     Set<GameReview> gameIndex = new HashSet<>();
-    String message = "ucitavam linkove, moze potrajati ako je konekcija spora...";
-    String startPage = "<div style='font-size:30px; position:absolute; top:40%; left:20%'>" + message + "</div>";
     String gameIndexList;
     WebEngine browser;
     Model model;
-    private static final Logger LOGGER = Logger.getLogger(SKController.class.getName());
+
+    String message = "ucitavam linkove, moze potrajati ako je konekcija spora...";
+    String startPage = "<div style='font-size:30px; position:absolute; top:40%; left:20%'>" + message + "</div>";
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -125,8 +128,8 @@ public class SKController implements Initializable {
 
     @FXML
     public void openAboutWindow() throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/about.fxml"));
-        Scene scene = new Scene(parent);
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/about.fxml"));
+        Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon/dp.png")));
@@ -135,9 +138,9 @@ public class SKController implements Initializable {
     }
 
     @FXML
-    public void update() throws IOException {
-        Parent load = FXMLLoader.load(getClass().getResource("/fxml/update.fxml"));
-        Scene scene = new Scene(load);
+    public void openUpdateWindow() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/update.fxml"));
+        Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setOpacity(0.95);
