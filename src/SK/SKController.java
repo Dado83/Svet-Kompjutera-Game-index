@@ -45,8 +45,6 @@ import javafx.stage.StageStyle;
 public class SKController implements Initializable {
 
     @FXML
-    private MenuItem update;
-    @FXML
     private WebView webView;
     @FXML
     private TextField title;
@@ -54,8 +52,6 @@ public class SKController implements Initializable {
     private TextField author;
     @FXML
     private TextField score;
-    @FXML
-    private AnchorPane root;
     @FXML
     private Label numberOfLinks;
     @FXML
@@ -129,23 +125,23 @@ public class SKController implements Initializable {
 
     @FXML
     public void openAboutWindow() throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource("/about.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/fxml/about.fxml"));
         Scene scene = new Scene(parent);
         Stage stage = new Stage();
         stage.setScene(scene);
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/dp.png")));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon/dp.png")));
         stage.setResizable(false);
         stage.show();
     }
 
     @FXML
     public void update() throws IOException {
-        Parent load = FXMLLoader.load(getClass().getResource("/Update.fxml"));
+        Parent load = FXMLLoader.load(getClass().getResource("/fxml/update.fxml"));
         Scene scene = new Scene(load);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setOpacity(0.95);
-        stage.getIcons().add(new Image(getClass().getResource("/sk.png").toString()));
+        stage.getIcons().add(new Image(getClass().getResource("/icon/sk.png").toString()));
         stage.show();
     }
 
