@@ -11,24 +11,23 @@ import javafx.stage.WindowEvent;
 
 
 public class Main extends Application {
-	
 
-	@Override
+    @Override
     public void start(Stage stage) throws Exception {
-       Parent root = FXMLLoader.load(getClass().getResource("/fxml/sk.fxml"));
-       Scene scene = new Scene(root);
-       stage.setScene(scene);
-       stage.show();
-       stage.setResizable(false);
-       stage.setTitle("Svet igara - game index (by 83deadpool)");
-       stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon/sk.png")));
-       stage.setOnCloseRequest((WindowEvent event) -> {
-           Platform.exit();
-       });
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/sk.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+        stage.setResizable(false);
+        stage.setTitle("Svet igara - game index (by 83deadpool)");
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon/sk.png")));
+        stage.setOnCloseRequest((WindowEvent event) -> {
+            Platform.exit();
+        });
     }
-    
+
     public static void main(String[] args) {
-    	launch(args);
+        launch(args);
     }
-    
+
 }
