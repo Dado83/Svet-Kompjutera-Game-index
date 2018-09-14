@@ -108,7 +108,6 @@ public class UpdateController implements Initializable {
         List<String> tempList = linkURLs.stream().filter(ss -> !ss.contains("indexe")).collect(Collectors.toList());
         linkURLs = new ArrayList<>(tempList);
         LOGGER.info("Broj linkova poslije filtera: " + linkURLs.size());
-
     }
 
     @FXML
