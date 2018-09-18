@@ -251,6 +251,12 @@ public class UpdateController implements Initializable {
 
                         ftp.login(loggonData[0], loggonData[1]);
                         ftp.storeFile("SKGameIndex.txt", inputStream);
+
+                        inputStream.close();
+                        if (ftp.isConnected()) {
+                            ftp.logout();
+                            ftp.disconnect();
+                        }
                     } catch (IOException ee) {
                         LOGGER.severe("nisam snimio fajl");
                         ee.getLocalizedMessage();
