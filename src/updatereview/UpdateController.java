@@ -3,10 +3,14 @@ package updatereview;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import gamereview.GameReview;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -33,6 +37,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.net.ftp.FTPClient;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -220,7 +225,7 @@ public class UpdateController implements Initializable {
                         FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("TEXT files", "*.txt");
                         fc.getExtensionFilters().add(filter);
                         fc.setInitialDirectory(file);
-                        fc.setTitle("Snimi kao 'skIgre'");
+                        fc.setTitle("Snimi...");
                         fc.setInitialFileName("SKGameIndex");
                         Stage stage = (Stage) root.getScene().getWindow();
                         File saveFile = fc.showSaveDialog(stage);
@@ -230,6 +235,22 @@ public class UpdateController implements Initializable {
                             String toJson = gson.toJson(games, type);
                             writer.write(toJson);
                         }
+                        File uploadFile = fc.showOpenDialog(stage);
+                        FTPClient ftp = new FTPClient();
+                        InputStream inputStream = new FileInputStream(uploadFile);
+                        ftp.connect("files9.hostinger.in");
+
+                        String[] loggonData = new String[2];
+                        BufferedReader reader = new BufferedReader(new FileReader(new File("C:/ftp.txt")));
+                        String line;
+                        int i = 0;
+                        while ((line = reader.readLine()) != null) {
+                            loggonData[i] = line;
+                            i++;
+                        }
+
+                        ftp.login(loggonData[0], loggonData[1]);
+                        ftp.storeFile("SKGameIndex.txt", inputStream);
                     } catch (IOException ee) {
                         LOGGER.severe("nisam snimio fajl");
                         ee.getLocalizedMessage();
