@@ -222,7 +222,7 @@ public class UpdateController implements Initializable {
                         FileChooser fc = new FileChooser();
                         String desktop = System.getProperty("user.home") + "/desktop";
                         File file = new File(desktop);
-                        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("TEXT files", "*.txt");
+                        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("JSON files", "*.json");
                         fc.getExtensionFilters().add(filter);
                         fc.setInitialDirectory(file);
                         fc.setTitle("Snimi...");
