@@ -250,7 +250,7 @@ public class UpdateController implements Initializable {
                         }
 
                         ftp.login(loggonData[0], loggonData[1]);
-                        ftp.storeFile("SKGameIndex.txt", inputStream);
+                        ftp.storeFile("SKGameIndex.json", inputStream);
 
                         inputStream.close();
                         if (ftp.isConnected()) {
