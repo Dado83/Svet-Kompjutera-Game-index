@@ -45,7 +45,7 @@ public class Model {
         StringBuilder gameIndexGson;
         try {
             LOGGER.log(Level.INFO, "Pocinjem ucitavat linkove...\n");
-            URL url = new URL("http://fairplay.hol.es/SKGameIndex.txt");
+            URL url = new URL("http://fairplay.hol.es/SKGameIndex.json");
             Gson gson = new Gson();
             try (BufferedReader reader = new BufferedReader(
                     new InputStreamReader(url.openStream(), Charset.forName("utf-8").newDecoder()))) {
